@@ -54,6 +54,23 @@
             background: #ddd;
             margin: 20px 0;
         }
+        .car-image {
+            max-width: 300px;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .recommendation-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .recommendation-item {
+            flex: 1;
+            min-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -224,6 +241,7 @@
         </form>
     {% endif %}
 
+
     {% if show_result %}
     <div class="result">
         <h2>Recommendation</h2>
@@ -231,12 +249,36 @@
 
         <hr>
 
-        <div class="summary">
-            <p><strong>{{ top_body_types[0] }}:</strong> {{ body_descriptions[top_body_types[0]] }}</p>
-            <p><strong>{{ top_body_types[1] }}:</strong> {{ body_descriptions[top_body_types[1]] }}</p>
-            <p><strong>{{ top_fuel_types[0] }}:</strong> {{ fuel_descriptions[top_fuel_types[0]] }}</p>
-            <p><strong>{{ top_fuel_types[1] }}:</strong> {{ fuel_descriptions[top_fuel_types[1]] }}</p>
+        <h3>Recommended Body Types</h3>
+        <div class="recommendation-container">
+            <div class="recommendation-item">
+                <h4>{{ top_body_types[0] }}</h4>
+                <img src="{{ body_images[top_body_types[0]] }}" alt="{{ top_body_types[0] }}" class="car-image">
+                <p>{{ body_descriptions[top_body_types[0]] }}</p>
+            </div>
+            
+            <div class="recommendation-item">
+                <h4>{{ top_body_types[1] }}</h4>
+                <img src="{{ body_images[top_body_types[1]] }}" alt="{{ top_body_types[1] }}" class="car-image">
+                <p>{{ body_descriptions[top_body_types[1]] }}</p>
+            </div>
         </div>
+
+        <h3>Recommended Fuel Types</h3>
+        <div class="recommendation-container">
+            <div class="recommendation-item">
+                <h4>{{ top_fuel_types[0] }}</h4>
+                <img src="{{ fuel_images[top_fuel_types[0]] }}" alt="{{ top_fuel_types[0] }}" class="car-image">
+                <p>{{ fuel_descriptions[top_fuel_types[0]] }}</p>
+            </div>
+            
+            <div class="recommendation-item">
+                <h4>{{ top_fuel_types[1] }}</h4>
+                <img src="{{ fuel_images[top_fuel_types[1]] }}" alt="{{ top_fuel_types[1] }}" class="car-image">
+                <p>{{ fuel_descriptions[top_fuel_types[1]] }}</p>
+            </div>
+        </div>
+
         <p><a href="{{ url_for('index') }}">Take the quiz again</a></p>
     </div>
     {% endif %}
