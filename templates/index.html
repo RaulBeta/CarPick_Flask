@@ -61,7 +61,11 @@
 
     {% if not show_result %}
         <p>Choose the questionnaire length:</p>
-        <p><a href="{{ url_for('index', length='short') }}">Short (7 Questions)</a> | <a href="{{ url_for('index', length='medium') }}">Medium (12 Questions)</a> | <a href="{{ url_for('index', length='long') }}">Long (22 Questions)</a></p>
+        <p>
+            <a href="{{ url_for('index', length='short') }}">Short ({{ short_question_count }} Questions)</a> |
+            <a href="{{ url_for('index', length='medium') }}">Medium ({{ medium_question_count }} Questions)</a> |
+            <a href="{{ url_for('index', length='long') }}">Long ({{ long_question_count }} Questions)</a>
+        </p>
 
         <form method="POST">
             {% for question in questions %}
@@ -70,24 +74,24 @@
                     <select id="general" name="general" required>
                         <option value="1">Daily commuting</option>
                         <option value="2">Family travel</option>
-                        <option value="3">Long trips</option>
+                        <option value="3">Highway driving</option>
                         <option value="4">Towing or heavy lifting</option>
+                        <option value="5">Sporty driving</option>
+                        <option value="6">Off-road</option>
                     </select>
                 {% elif question == "passenger" %}
                     <label for="passenger">How many passengers do you need to accommodate?</label>
                     <select id="passenger" name="passenger" required>
-                        <option value="1">Just myself</option>
-                        <option value="2">1–2 passengers</option>
-                        <option value="3">3–5 passengers</option>
-                        <option value="4">More than 5 passengers</option>
+                        <option value="1">1–2 passengers</option>
+                        <option value="2">3–5 passengers</option>
+                        <option value="3">More than 5 passengers</option>
                     </select>
                 {% elif question == "cargo" %}
-                    <label for="cargo">How important is cargo space to you?</label>
+                    <label for="cargo">How much cargo space do you need?</label>
                     <select id="cargo" name="cargo" required>
-                        <option value="1">Not important</option>
-                        <option value="2">Moderate</option>
+                        <option value="1">Small</option>
+                        <option value="2">Medium</option>
                         <option value="3">Large</option>
-                        <option value="4">Very large</option>
                     </select>
                 {% elif question == "travel" %}
                     <label for="travel">What level of comfort do you expect for long trips?</label>
@@ -96,24 +100,15 @@
                         <option value="2">Moderate</option>
                         <option value="3">High</option>
                     </select>
-                {% elif question == "driving" %}
-                    <label for="driving">What type of driving do you do most?</label>
-                    <select id="driving" name="driving" required>
-                        <option value="1">City driving</option>
-                        <option value="2">Highway driving</option>
-                        <option value="3">Off-roading</option>
-                        <option value="4">Sporty driving</option>
-                    </select>
-                {% elif question == "trip" %}
-                    <label for="trip">What type of trips do you usually take?</label>
-                    <select id="trip" name="trip" required>
+                {% elif question == "trip_length" %}
+                    <label for="trip_length">What type of trips do you usually take?</label>
+                    <select id="trip_length" name="trip_length" required>
                         <option value="1">Short trips</option>
-                        <option value="2">Moderate trips</option>
-                        <option value="3">Long trips</option>
+                        <option value="2">Long trips</option>
                     </select>
-                {% elif question == "value" %}
-                    <label for="value">What do you value most on long trips?</label>
-                    <select id="value" name="value" required>
+                {% elif question == "long_trip" %}
+                    <label for="long_trip">What do you value most on long trips?</label>
+                    <select id="long_trip" name="long_trip" required>
                         <option value="1">Fuel efficiency</option>
                         <option value="2">Comfort</option>
                         <option value="3">Speed</option>
@@ -132,14 +127,6 @@
                         <option value="1">Very important</option>
                         <option value="2">Moderately important</option>
                         <option value="3">Not important</option>
-                    </select>
-                {% elif question == "scenario" %}
-                    <label for="scenario">What kind of fuel efficiency is most important to you?</label>
-                    <select id="scenario" name="scenario" required>
-                        <option value="1">Efficient for short trips</option>
-                        <option value="2">Efficient for moderate trips</option>
-                        <option value="3">Efficient for long trips</option>
-                        <option value="4">Not important</option>
                     </select>
                 {% elif question == "maneuverability" %}
                     <label for="maneuverability">How important is it for the car to be easy to park and maneuver?</label>
@@ -174,26 +161,18 @@
                         <option value="2">Mid-range budget</option>
                         <option value="3">High budget</option>
                     </select>
-                {% elif question == "safety" %}
-                    <label for="safety">How important is safety to you?</label>
-                    <select id="safety" name="safety" required>
-                        <option value="1">Standard safety features are fine</option>
-                        <option value="2">Advanced safety features are important</option>
-                        <option value="3">Safety is my top priority</option>
-                    </select>
                 {% elif question == "reliability" %}
                     <label for="reliability">How important is overall reliability to you?</label>
                     <select id="reliability" name="reliability" required>
                         <option value="1">Very important; I want a car that almost never breaks down</option>
                         <option value="2">Moderate; I expect a reliable car but don’t mind occasional repairs</option>
-                        <option value="3">Not too important; I value other features more than reliability</option>
                     </select>
-                {% elif question == "maintenance" %}
-                    <label for="maintenance">How much can you afford to spend on maintenance if problems do occur?</label>
-                    <select id="maintenance" name="maintenance" required>
-                        <option value="1">Low; I want a car with minimal maintenance costs</option>
-                        <option value="2">Moderate; I can handle some repair costs</option>
-                        <option value="3">High; I’m okay with higher maintenance costs if the car offers unique features</option>
+                {% elif question == "running_cost" %}
+                    <label for="running_cost">How much would you like the running cost to be?</label>
+                    <select id="running_cost" name="running_cost" required>
+                        <option value="1">Low</option>
+                        <option value="2">Moderate</option>
+                        <option value="3">High</option>
                     </select>
                 {% elif question == "availability" %}
                     <label for="availability">How important is high availability and varied options in the market?</label>
@@ -202,24 +181,42 @@
                         <option value="2">Moderately important; I don’t mind slightly rarer options</option>
                         <option value="3">Not important; I’m okay with niche or unique cars</option>
                     </select>
-                {% elif question == "answer_charging_station" %}
-                    <label for="answer_charging_station">How common are charging stations in your area?</label>
-                    <select id="answer_charging_station" name="answer_charging_station" required>
-                        <option value="1">Very common; I see them everywhere</option>
-                        <option value="2">Somewhat common; I’ve seen a few</option>
-                        <option value="3">Rare or nonexistent</option>
+                {% elif question == "charging_stations" %}
+                    <label for="charging_stations">What's the availability of charging stations in your area?</label>
+                    <select id="charging_stations" name="charging_stations" required>
+                        <option value="1">Common</option>
+                        <option value="2">Rare or nonexistent</option>
                     </select>
-                {% elif question == "height" %}
-                    <label for="height">Do you prefer a car with a higher driving position?</label>
-                    <select id="height" name="height" required>
-                        <option value="1">Yes, I prefer sitting higher</option>
-                        <option value="2">No, I prefer a lower, car-like position</option>
+                {% elif question == "ride_height" %}
+                    <label for="ride_height">Do you prefer a car with a higher or lower driving position?</label>
+                    <select id="ride_height" name="ride_height" required>
+                        <option value="1">I prefer a lower, car-like position</option>
+                        <option value="2">I prefer sitting higher</option>
+                    </select>
+                {% elif question == "stepin_height" %}
+                    <label for="stepin_height">Do you prefer a car with a higher or lower step-in height?</label>
+                    <select id="stepin_height" name="stepin_height" required>
+                        <option value="1">Lower</option>
+                        <option value="2">Higher</option>
                     </select>
                 {% elif question == "at_home_charging" %}
                     <label for="at_home_charging">Do you have access to charging at home?</label>
                     <select id="at_home_charging" name="at_home_charging" required>
                         <option value="1">Yes, I can install or already have a charging setup</option>
                         <option value="2">No, I cannot charge at home</option>
+                    </select>
+                {% elif question == "noise" %}
+                    <label for="noise">How much engine noise would you prefer?</label>
+                    <select id="noise" name="noise" required>
+                        <option value="1">Quiet</option>
+                        <option value="2">Normal</option>
+                        <option value="3">Loud</option>
+                    </select>
+                {% elif question == "bed" %}
+                    <label for="bed">Would you like a truck bed?</label>
+                    <select id="bed" name="bed" required>
+                        <option value="1">Yes</option>
+                        <option value="2">No</option>
                     </select>
                 {% endif %}
             {% endfor %}
