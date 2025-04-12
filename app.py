@@ -23,10 +23,32 @@ FUEL_TYPE_DESCRIPTIONS = {
     "Gasoline": "Gasoline cars are widely available and offer a balance of performance and affordability. They're suitable for all types of driving."
 }
 
+# Image paths for body types
+BODY_TYPE_IMAGES = {
+    "Sedan": "static/images/sedan.jpg",
+    "Hatchback": "static/images/hatchback.jpg",
+    "SUV": "static/images/suv.jpg",
+    "Truck": "static/images/truck.jpg",
+    "Coupe": "static/images/coupe.jpg",
+    "Wagon": "static/images/wagon.jpg",
+    "Minivan": "static/images/minivan.jpg",
+    "Crossover": "static/images/crossover.jpg"
+}
+
+# Image paths for fuel types
+FUEL_TYPE_IMAGES = {
+    "Electric": "static/images/electric.jpg",
+    "Plug-In Hybrid": "static/images/plugin_hybrid.jpg",
+    "Hybrid": "static/images/hybrid.jpg",
+    "Diesel": "static/images/diesel.jpg",
+    "Gasoline": "static/images/gasoline.jpg"
+}
+
 # Define question sets for different questionnaire lengths
 SHORT_QUESTIONS = ["general", "price", "passenger", "efficiency", "towing", "trip_length", "cargo"]
 MEDIUM_QUESTIONS = SHORT_QUESTIONS + ["reliability", "running_cost", "maneuverability", "ride_height", "stepin_height", "charging_stations", "at_home_charging"]
 LONG_QUESTIONS = MEDIUM_QUESTIONS + ["long_trip_str", "maintenance", "noise", "usability", "battery", "availability", "bed"]
+
 
 QUESTION_SETS = {
     "short": SHORT_QUESTIONS,
@@ -436,7 +458,14 @@ def CarPick(answers):
     body_descriptions = {body: BODY_TYPE_DESCRIPTIONS[body] for body in top_body_types}
     fuel_descriptions = {fuel: FUEL_TYPE_DESCRIPTIONS[fuel] for fuel in top_fuel_types}
 
-    return top_body_types, body_descriptions, top_fuel_types, fuel_descriptions
+    return (
+    top_body_types, 
+    body_descriptions, 
+    top_fuel_types, 
+    fuel_descriptions,
+    {body: BODY_TYPE_IMAGES[body] for body in top_body_types},
+    {fuel: FUEL_TYPE_IMAGES[fuel] for fuel in top_fuel_types}
+)
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/<length>", methods=["GET", "POST"])
@@ -449,13 +478,15 @@ def index(length="short"):
 
     if request.method == "POST":
         answers = {q: request.form.get(q) for q in LONG_QUESTIONS} # Collect all potential answers
-        top_body_types, body_descriptions, top_fuel_types, fuel_descriptions = CarPick(answers)
+        top_body_types, body_descriptions, top_fuel_types, fuel_descriptions, body_images, fuel_images = CarPick(answers)
         return render_template(
             "index.html",
             top_body_types=top_body_types,
             body_descriptions=BODY_TYPE_DESCRIPTIONS, # Use the global dictionary
             top_fuel_types=top_fuel_types,
             fuel_descriptions=FUEL_TYPE_DESCRIPTIONS, # Use the global dictionary
+            body_images=body_images,
+            fuel_images=fuel_images,
             show_result=True,
             question_length=length,
             questions=questions_to_ask,
