@@ -442,6 +442,7 @@ def CarPick(answers):
         "Diesel": diesel_points,
         "Gasoline": gasoline_points
     }
+
     # Sort body types by points in descending order
     sorted_body_types = sorted(
         body_type_points.items(),
@@ -471,9 +472,7 @@ def CarPick(answers):
     fuel_descriptions,
     {body: BODY_TYPE_IMAGES[body] for body in top_body_types},
     {fuel: FUEL_TYPE_IMAGES[fuel] for fuel in top_fuel_types}
-)
-
-
+    )
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
@@ -532,5 +531,6 @@ def chat():
         return jsonify({"reply": reply})
     except Exception as e:
         return jsonify({"reply": f"Error: {str(e)}"})
+
 if __name__ == "__main__":
     app.run(debug=True)

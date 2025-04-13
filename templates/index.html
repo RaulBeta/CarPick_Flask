@@ -100,7 +100,7 @@
 
 <div style="position: fixed; bottom: 20px; right: 20px; width: 300px;">
     <div style="border: 1px solid #ccc; background: white; padding: 10px;">
-        <h3>Get suggest from AI</h3>
+        <h3>AI Assistant</h3>
         <div id="chat-box" style="height: 200px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #eee; padding: 5px;"></div>
         <input type="text" id="user-input" placeholder="Type a question..." style="width: 100%; padding: 5px;">
         <button onclick="sendMessage()" style="margin-top: 5px;">Send</button>
@@ -112,7 +112,8 @@
     <h1 style="text-align: center; font-size: 3em; margin-top: 30px;">CarPick</h1>
 
     {% if not show_result %}
-        <p>Choose the questionnaire length:</p>
+        <p style="text-align: center;">Choose the questionnaire length:</p>
+
 
 <div class="questionnaire-buttons">
     <div style="text-align: center; margin-top: 20px;"><a href="/index?length=short">Short ({{ short_question_count }} Questions)</a>
