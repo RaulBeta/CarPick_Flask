@@ -1,6 +1,16 @@
 from flask import Flask, render_template, request
+import openai
+from flask import jsonify
 
 app = Flask(__name__)
+
+@app.route('/')
+def welcome():
+    return render_template('welcome.html')
+
+@app.route('/main', methods=['GET', 'POST'])
+def main():
+    return render_template('index.html')
 
 # Descriptions for body types
 BODY_TYPE_DESCRIPTIONS = {
@@ -504,6 +514,20 @@ def index(length="short"):
         medium_question_count=medium_question_count,
         long_question_count=long_question_count
     )
+@app.route("/chat", methods=["POST"])
+def chat():
+    user_message = request.json.get("message")
 
+    try:
+        openai.api_key = "xxx"  
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": user_message}]
+        )
+        reply = response["choices"][0]["message"]["content"]
+        return jsonify({"reply": reply})
+    except Exception as e:
+        return jsonify({"reply": f"Error: {str(e)}"})
 if __name__ == "__main__":
     app.run(debug=True)
