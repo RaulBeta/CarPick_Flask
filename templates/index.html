@@ -54,93 +54,120 @@
             background: #ddd;
             margin: 20px 0;
         }
-        .car-image {
-            max-width: 300px;
-            height: auto;
-            margin: 10px 0;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .recommendation-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .recommendation-item {
-            flex: 1;
-            min-width: 300px;
-        }
     </style>
 
-    <style>
-        .questionnaire-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 40px 0;
-        }
-        .questionnaire-buttons a {
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 12px;
-            border: none;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .questionnaire-buttons a:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-    </style>
 </head>
-
-<div style="position: fixed; bottom: 20px; right: 20px; width: 300px;">
-    <div style="border: 1px solid #ccc; background: white; padding: 10px;">
-        <h3>Get suggest from AI</h3>
-        <div id="chat-box" style="height: 200px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #eee; padding: 5px;"></div>
-        <input type="text" id="user-input" placeholder="Type a question..." style="width: 100%; padding: 5px;">
-        <button onclick="sendMessage()" style="margin-top: 5px;">Send</button>
-    </div>
-</div>
-
-<script>
-function sendMessage() {
-    const input = document.getElementById("user-input");
-    const chatBox = document.getElementById("chat-box");
-    const userMessage = input.value;
-    if (!userMessage.trim()) return;
-
-    chatBox.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
-    input.value = "";
-
-    fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage })
-    })
-    .then(res => res.json())
-    .then(data => {
-        chatBox.innerHTML += `<p><strong>AI:</strong> ${data.reply}</p>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
-}
-</script>
 <body>
     <h1>CarPick</h1>
 
     {% if not show_result %}
-        <p>Choose the questionnaire length:</p>
-        
-<div class="questionnaire-buttons">
-    <a href="{{ url_for('index', length='short') }}">Short ({{ short_question_count }} Questions)</a>
-    <a href="{{ url_for('index', length='medium') }}">Medium ({{ medium_question_count }} Questions)</a>
-    <a href="{{ url_for('index', length='long') }}">Long ({{ long_question_count }} Questions)</a>
+
+        <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarPick</title>
+
+
+    <style>
+
+        .header-bar {
+            background-color: green;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .slideshow-container img {
+            width: 100%;
+            height: auto;
+            max-height: 400px; /
+            object-fit: cover;
+        }
+
+        .slideshow-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .slideshow-container .slide {
+            display: none;
+        }
+
+        .slideshow-container .slide:first-of-type {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="header-bar">
+        CarPick
+    </div>
+
+
+    <style>
+        .slideshow-container img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .slideshow-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .slideshow-container .slide {
+            display: none;
+        }
+
+        .slideshow-container .slide:first-of-type {
+            display: block;
+        }
+    </style>
+
+
+
+<div class="slideshow-container">
+
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/sedan.jpg') }}" alt="Car 1">
+    </div>
+
+
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/electricnew.jpg') }}" alt="Car 2">
+
+    </div>
+
+
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/newsuv.jpg') }}" alt="Car 3">
+
+    </div>
+
+
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/pickuptruck.jpg') }}" alt="Car 4">
+
+    </div>
 </div>
 
+
+
+        <p>Choose the questionnaire length:</p>
+        <p>
+            <a href="{{ url_for('index', length='short') }}">Short ({{ short_question_count }} Questions)</a> |
+            <a href="{{ url_for('index', length='medium') }}">Medium ({{ medium_question_count }} Questions)</a> |
+            <a href="{{ url_for('index', length='long') }}">Long ({{ long_question_count }} Questions)</a>
+        </p>
 
         <form method="POST">
             {% for question in questions %}
@@ -299,7 +326,6 @@ function sendMessage() {
         </form>
     {% endif %}
 
-
     {% if show_result %}
     <div class="result">
         <h2>Recommendation</h2>
@@ -307,38 +333,40 @@ function sendMessage() {
 
         <hr>
 
-        <h3>Recommended Body Types</h3>
-        <div class="recommendation-container">
-            <div class="recommendation-item">
-                <h4>{{ top_body_types[0] }}</h4>
-                <img src="{{ body_images[top_body_types[0]] }}" alt="{{ top_body_types[0] }}" class="car-image">
-                <p>{{ body_descriptions[top_body_types[0]] }}</p>
-            </div>
-            
-            <div class="recommendation-item">
-                <h4>{{ top_body_types[1] }}</h4>
-                <img src="{{ body_images[top_body_types[1]] }}" alt="{{ top_body_types[1] }}" class="car-image">
-                <p>{{ body_descriptions[top_body_types[1]] }}</p>
-            </div>
+        <div class="summary">
+            <p><strong>{{ top_body_types[0] }}:</strong> {{ body_descriptions[top_body_types[0]] }}</p>
+            <p><strong>{{ top_body_types[1] }}:</strong> {{ body_descriptions[top_body_types[1]] }}</p>
+            <p><strong>{{ top_fuel_types[0] }}:</strong> {{ fuel_descriptions[top_fuel_types[0]] }}</p>
+            <p><strong>{{ top_fuel_types[1] }}:</strong> {{ fuel_descriptions[top_fuel_types[1]] }}</p>
         </div>
-
-        <h3>Recommended Fuel Types</h3>
-        <div class="recommendation-container">
-            <div class="recommendation-item">
-                <h4>{{ top_fuel_types[0] }}</h4>
-                <img src="{{ fuel_images[top_fuel_types[0]] }}" alt="{{ top_fuel_types[0] }}" class="car-image">
-                <p>{{ fuel_descriptions[top_fuel_types[0]] }}</p>
-            </div>
-            
-            <div class="recommendation-item">
-                <h4>{{ top_fuel_types[1] }}</h4>
-                <img src="{{ fuel_images[top_fuel_types[1]] }}" alt="{{ top_fuel_types[1] }}" class="car-image">
-                <p>{{ fuel_descriptions[top_fuel_types[1]] }}</p>
-            </div>
-        </div>
-
         <p><a href="{{ url_for('index') }}">Take the quiz again</a></p>
     </div>
     {% endif %}
 </body>
+
+
+
+
+
+<!-- JavaScript for Slideshow -->
+<script>
+    // JavaScript to cycle through slides
+    let slideIndex = 0;
+    function showSlides() {
+        let slides = document.querySelectorAll('.slide'); // Get all slides
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = 'none'; // Hide all slides
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) { slideIndex = 1; } // Loop back to the first slide
+        slides[slideIndex - 1].style.display = 'block'; // Show the current slide
+        setTimeout(showSlides, 3000); // Change slide every 3 seconds
+    }
+
+    // Start the slideshow
+    showSlides();
+</script>
+
+</body>
+
 </html>
