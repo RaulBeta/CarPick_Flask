@@ -107,42 +107,21 @@
     </div>
 </div>
 
-<script>
-function sendMessage() {
-    const input = document.getElementById("user-input");
-    const chatBox = document.getElementById("chat-box");
-    const userMessage = input.value;
-    if (!userMessage.trim()) return;
 
-    chatBox.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
-    input.value = "";
-
-    fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage })
-    })
-    .then(res => res.json())
-    .then(data => {
-        chatBox.innerHTML += `<p><strong>AI:</strong> ${data.reply}</p>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
-}
-</script>
 <body>
-    <h1>CarPick</h1>
+    <h1 style="text-align: center; font-size: 3em; margin-top: 30px;">CarPick</h1>
 
     {% if not show_result %}
         <p>Choose the questionnaire length:</p>
 
 <div class="questionnaire-buttons">
-    <a href="{{ url_for('index', length='short') }}">Short ({{ short_question_count }} Questions)</a>
-    <a href="{{ url_for('index', length='medium') }}">Medium ({{ medium_question_count }} Questions)</a>
-    <a href="{{ url_for('index', length='long') }}">Long ({{ long_question_count }} Questions)</a>
+    <div style="text-align: center; margin-top: 20px;"><a href="/index?length=short">Short ({{ short_question_count }} Questions)</a>
+    <a href="/index?length=medium">Medium ({{ medium_question_count }} Questions)</a>
+    <a href="/index?length=long">Long ({{ long_question_count }} Questions)</a></div>
 </div>
 
 
-        <form method="POST">
+        <form method="post" id="question-form" style="display: none;"
             {% for question in questions %}
                 {% if question == "general" %}
                     <label for="general">What do you primarily need the car for?</label>
@@ -340,5 +319,45 @@ function sendMessage() {
         <p><a href="{{ url_for('index') }}">Take the quiz again</a></p>
     </div>
     {% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("question-form");
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("length")) {
+        if (form) form.style.display = "block";
+    }
+});
+
+function sendMessage() {
+    const userInput = document.getElementById("user-input").value;
+    const chatBox = document.getElementById("chat-box");
+
+    const userDiv = document.createElement("div");
+    userDiv.textContent = "You: " + userInput;
+    chatBox.appendChild(userDiv);
+
+    fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const botDiv = document.createElement("div");
+        botDiv.textContent = "AI: " + data.reply;
+        botDiv.style.color = "gray";
+        chatBox.appendChild(botDiv);
+    })
+    .catch(error => {
+        const errorDiv = document.createElement("div");
+        errorDiv.textContent = "Error: " + error;
+        errorDiv.style.color = "red";
+        chatBox.appendChild(errorDiv);
+    });
+}
+
+</script>
+
 </body>
 </html>

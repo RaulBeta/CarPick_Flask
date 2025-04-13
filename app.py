@@ -1,15 +1,15 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import openai
 
 app = Flask(__name__)
 
-@app.route('/')
-def welcome():
-    return render_template('welcome.html')
+@app.route("/")
+def home():
+    return redirect(url_for("index"))
 
 @app.route('/main', methods=['GET', 'POST'])
 def main():
-    return render_template('index.html')
+    return render_template("index.html")
 
 # Descriptions for body types
 BODY_TYPE_DESCRIPTIONS = {
@@ -442,7 +442,6 @@ def CarPick(answers):
         "Diesel": diesel_points,
         "Gasoline": gasoline_points
     }
-
     # Sort body types by points in descending order
     sorted_body_types = sorted(
         body_type_points.items(),
@@ -457,13 +456,11 @@ def CarPick(answers):
         reverse=True
     )
 
-    # Get the top two body types
-    top_body_types = [k for k, v in sorted_body_types[:2]]
-
     # Get the top two fuel types
     top_fuel_types = [k for k, v in sorted_fuel_types[:2]]
 
     # Get descriptions for the top body types and fuel types
+    top_body_types = [item[0] for item in sorted_body_types[:2]]
     body_descriptions = {body: BODY_TYPE_DESCRIPTIONS[body] for body in top_body_types}
     fuel_descriptions = {fuel: FUEL_TYPE_DESCRIPTIONS[fuel] for fuel in top_fuel_types}
 
@@ -476,43 +473,50 @@ def CarPick(answers):
     {fuel: FUEL_TYPE_IMAGES[fuel] for fuel in top_fuel_types}
 )
 
+
+
 @app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
 @app.route("/<length>", methods=["GET", "POST"])
 def index(length="short"):
-    questions_to_ask = QUESTION_SETS.get(length, SHORT_QUESTIONS) # Default to short if invalid
+    length = request.args.get("length", length)
+    questions_to_ask = QUESTION_SETS.get(length, SHORT_QUESTIONS)
 
     short_question_count = len(SHORT_QUESTIONS)
     medium_question_count = len(MEDIUM_QUESTIONS)
     long_question_count = len(LONG_QUESTIONS)
 
     if request.method == "POST":
-        answers = {q: request.form.get(q) for q in LONG_QUESTIONS} # Collect all potential answers
+        answers = {q: request.form.get(q) for q in LONG_QUESTIONS}
+
         top_body_types, body_descriptions, top_fuel_types, fuel_descriptions, body_images, fuel_images = CarPick(answers)
+
         return render_template(
             "index.html",
+            short_question_count=short_question_count,
+            medium_question_count=medium_question_count,
+            long_question_count=long_question_count,
             top_body_types=top_body_types,
-            body_descriptions=BODY_TYPE_DESCRIPTIONS, # Use the global dictionary
+            body_descriptions=BODY_TYPE_DESCRIPTIONS,
             top_fuel_types=top_fuel_types,
-            fuel_descriptions=FUEL_TYPE_DESCRIPTIONS, # Use the global dictionary
+            fuel_descriptions=FUEL_TYPE_DESCRIPTIONS,
             body_images=body_images,
             fuel_images=fuel_images,
             show_result=True,
             question_length=length,
-            questions=questions_to_ask,
-            short_question_count = short_question_count,
-            medium_question_count = medium_question_count,
-            long_question_count = long_question_count
+            questions=questions_to_ask
         )
 
     return render_template(
         "index.html",
-        show_result=False,
-        question_length=length,
-        questions=questions_to_ask,
         short_question_count=short_question_count,
         medium_question_count=medium_question_count,
-        long_question_count=long_question_count
+        long_question_count=long_question_count,
+        show_result=False,
+        question_length=length,
+        questions=questions_to_ask
     )
+
 @app.route("/chat", methods=["POST"])
 def chat():
     user_message = request.json.get("message")
