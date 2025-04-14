@@ -55,11 +55,12 @@
             margin: 20px 0;
         }
         .car-image {
-            max-width: 300px;
+            max-width: 80%; /* Try this value and adjust as needed */
             height: auto;
-            margin: 10px 0;
+            margin: 10px 0; /* Center the images within their container */
             border-radius: 5px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block; /* Make them take up the full width of their line */
         }
         .recommendation-container {
             display: flex;
@@ -288,10 +289,7 @@
 
 
     {% if show_result %}
-    <div class="result" style="margin-right: 100px !important;">
-        <h2>Recommendation</h2>
-        <p>Based on your answers, we recommend a <strong>{{ top_body_types[0] }} or {{ top_body_types[1] }}</strong> body type and <strong>{{ top_fuel_types[0] }} or {{ top_fuel_types[1] }}</strong> fuel type!</p>
-
+    <div class="result" style="margin-left: 20px !important; width: calc(100% - 40px - 320px) !important; box-sizing: border-box !important;">
         <hr>
 
         <h3>Recommended Body Types</h3>
