@@ -96,6 +96,13 @@
             transform: translateY(-2px);
         }
     </style>
+    <style>
+        .result {
+            margin-top: 20px;
+            margin-right: 100px !important;
+        }
+    </style>
+}
 </head>
 
 <div style="position: fixed; bottom: 20px; right: 20px; width: 300px;">
@@ -281,7 +288,7 @@
 
 
     {% if show_result %}
-    <div class="result">
+    <div class="result" style="margin-right: 100px !important;">
         <h2>Recommendation</h2>
         <p>Based on your answers, we recommend a <strong>{{ top_body_types[0] }} or {{ top_body_types[1] }}</strong> body type and <strong>{{ top_fuel_types[0] }} or {{ top_fuel_types[1] }}</strong> fuel type!</p>
 
@@ -306,13 +313,11 @@
         <div class="recommendation-container">
             <div class="recommendation-item">
                 <h4>{{ top_fuel_types[0] }}</h4>
-                <img src="{{ fuel_images[top_fuel_types[0]] }}" alt="{{ top_fuel_types[0] }}" class="car-image">
                 <p>{{ fuel_descriptions[top_fuel_types[0]] }}</p>
             </div>
 
             <div class="recommendation-item">
                 <h4>{{ top_fuel_types[1] }}</h4>
-                <img src="{{ fuel_images[top_fuel_types[1]] }}" alt="{{ top_fuel_types[1] }}" class="car-image">
                 <p>{{ fuel_descriptions[top_fuel_types[1]] }}</p>
             </div>
         </div>

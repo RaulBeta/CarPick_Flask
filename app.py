@@ -471,7 +471,6 @@ def CarPick(answers):
     top_fuel_types, 
     fuel_descriptions,
     {body: BODY_TYPE_IMAGES[body] for body in top_body_types},
-    {fuel: FUEL_TYPE_IMAGES[fuel] for fuel in top_fuel_types}
     )
 
 @app.route("/", methods=["GET", "POST"])
@@ -488,7 +487,7 @@ def index(length="short"):
     if request.method == "POST":
         answers = {q: request.form.get(q) for q in LONG_QUESTIONS}
 
-        top_body_types, body_descriptions, top_fuel_types, fuel_descriptions, body_images, fuel_images = CarPick(answers)
+        top_body_types, body_descriptions, top_fuel_types, fuel_descriptions, body_images = CarPick(answers)
 
         return render_template(
             "index.html",
@@ -500,7 +499,6 @@ def index(length="short"):
             top_fuel_types=top_fuel_types,
             fuel_descriptions=FUEL_TYPE_DESCRIPTIONS,
             body_images=body_images,
-            fuel_images=fuel_images,
             show_result=True,
             question_length=length,
             questions=questions_to_ask
