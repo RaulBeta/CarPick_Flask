@@ -186,34 +186,34 @@
 
     <style>
         .questionnaire-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 40px 0;
-        }
-        .questionnaire-buttons a {
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 12px;
-            border: none;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .questionnaire-buttons a:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+    }
+    .questionnaire-buttons a {
+        padding: 15px 30px;
+        font-size: 18px;
+        border-radius: 12px;
+        border: none;
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .questionnaire-buttons a:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+
+    .questionnaire-buttons a.selected {
+        background-color: purple;
+        color: white;
+
+    }
     </style>
-    <style>
-        .result {
-            margin-top: 20px;
-            margin-right: 100px !important;
-        }
-    </style>
-}
+
 </head>
 
 <div style="position: fixed; bottom: 20px; right: 20px; width: 300px;">
@@ -234,9 +234,9 @@
 
 
 <div class="questionnaire-buttons">
-    <div style="text-align: center; margin-top: 20px;"><a href="/index?length=short">Short ({{ short_question_count }} Questions)</a>
-    <a href="/index?length=medium">Medium ({{ medium_question_count }} Questions)</a>
-    <a href="/index?length=long">Long ({{ long_question_count }} Questions)</a></div>
+    <a href="/index?length=short" {% if request.args.get('length') == 'short' %}class="selected"{% endif %}>Short ({{ short_question_count }} Questions)</a>
+    <a href="/index?length=medium" {% if request.args.get('length') == 'medium' %}class="selected"{% endif %}>Medium ({{ medium_question_count }} Questions)</a>
+    <a href="/index?length=long" {% if request.args.get('length') == 'long' %}class="selected"{% endif %}>Long ({{ long_question_count }} Questions)</a>
 </div>
         <body>
    <div class="slideshow-container" id="slideshow-container">
