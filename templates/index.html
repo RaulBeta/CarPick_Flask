@@ -1,6 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+    .dots-container {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin: 0 5px;
+        background-color: #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .dot.active {
+        background-color: #333;
+    }
+</style>
+
+    <style>
+    .slideshow-container img {
+        width: 40%;
+        height: 400px;
+        max-height: 600px;
+        object-fit: cover;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+
+    }
+
+    .slide {
+        display: none;
+        position: relative;
+    }
+
+    .slideshow-container .slide:first-of-type {
+        display: block;
+    }
+
+
+    .popup-box {
+        display: none;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+
+    .slideshow-image:hover + .popup-box {
+        display: block;
+    }
+</style>
+
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CarPick</title>
@@ -55,12 +122,12 @@
             margin: 20px 0;
         }
         .car-image {
-            max-width: 80%; /* Try this value and adjust as needed */
+            max-width: 50%;
             height: auto;
-            margin: 10px 0; /* Center the images within their container */
+            margin: 10px 0;
             border-radius: 5px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            display: block; /* Make them take up the full width of their line */
+            display: block;
         }
         .recommendation-container {
             display: flex;
@@ -128,9 +195,47 @@
     <a href="/index?length=medium">Medium ({{ medium_question_count }} Questions)</a>
     <a href="/index?length=long">Long ({{ long_question_count }} Questions)</a></div>
 </div>
+        <body>
+   <div class="slideshow-container" id="slideshow-container">
+
+    <!-- Slide 1 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/newsedan.jpg') }}" alt="Car 1" class="slideshow-image">
+        <div class="popup-box">Sedan: A comfortable family car.</div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/electricnew.jpg') }}" alt="Car 2" class="slideshow-image">
+        <div class="popup-box">Electric Car: Eco-friendly and efficient.</div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/newsuv.jpg') }}" alt="Car 3" class="slideshow-image">
+        <div class="popup-box">SUV: Spacious and versatile.</div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide">
+        <img src="{{ url_for('static', filename='images/pickuptruck.jpg') }}" alt="Car 4" class="slideshow-image">
+        <div class="popup-box">Pickup Truck: Built for heavy-duty jobs.</div>
+    </div>
+
+</div>
+        <div class="dots-container">
+    <span class="dot" onclick="setSlide(0)"></span>
+    <span class="dot" onclick="setSlide(1)"></span>
+    <span class="dot" onclick="setSlide(2)"></span>
+    <span class="dot" onclick="setSlide(3)"></span>
+</div>
 
 
-        <form method="post" id="question-form" style="display: none;"
+
+
+
+        <form method="post" id="question-form" style="display: none;">
+
             {% for question in questions %}
                 {% if question == "general" %}
                     <label for="general">What do you primarily need the car for?</label>
@@ -284,6 +389,8 @@
                 {% endif %}
             {% endfor %}
             <button type="submit">Get Recommendation</button>
+
+
         </form>
     {% endif %}
 
@@ -362,6 +469,66 @@ function sendMessage() {
 }
 
 </script>
+
+<script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+
+
+    function showSlide(index) {
+
+        slides.forEach((slide, i) => {
+            slide.style.display = 'none';
+
+            dots[i].classList.remove('active');
+        });
+
+
+        slides[index].style.display = 'block';
+
+
+        dots[index].classList.add('active');
+
+
+        slideIndex = index;
+    }
+
+
+    function showNextSlide() {
+        let nextIndex = (slideIndex + 1) % slides.length;
+        showSlide(nextIndex);
+    }
+
+
+    function startSlideshow() {
+        autoSlideTimer = setInterval(showNextSlide, 3000);
+    }
+
+
+    function stopSlideshow() {
+        clearInterval(autoSlideTimer);
+    }
+
+
+    function setSlide(index) {
+        stopSlideshow();
+        showSlide(index);
+        startSlideshow();
+    }
+
+
+    document.querySelectorAll('.slideshow-image').forEach((img) => {
+        img.addEventListener('mouseenter', stopSlideshow);
+        img.addEventListener('mouseleave', startSlideshow);
+    });
+
+
+    showSlide(slideIndex);
+    startSlideshow();
+</script>
+
+
 
 </body>
 </html>
