@@ -4,7 +4,13 @@
     <style>
     .dots-container {
         text-align: center;
-        margin-top: 10px;
+        margin-top: -125px;
+        z-index: 10;
+        pointer-events: auto;
+        position: relative;
+
+
+
     }
 
     .dot {
@@ -16,6 +22,9 @@
         border-radius: 50%;
         cursor: pointer;
         transition: background-color 0.3s;
+        pointer-events: auto;
+        z-index: 10;
+
     }
 
     .dot.active {
@@ -24,14 +33,27 @@
 </style>
 
     <style>
+
+        .slideshow-container {
+            position: relative;
+            margin-bottom: -400px;
+        z-index: 1;
+            overflow: hidden;
+
+
+   }
+
     .slideshow-container img {
         width: 950px;
         height: 500px;
-        max-width: 100%;
-        max-height: 100%;
+        max-width: 70%;
+        max-height: 70%;
 
         object-fit: cover;
-        position: relative;
+        overflow: hidden;
+        z-index: 1;
+
+        position: absolute;
         left: 50%;
         transform: translateX(-50%);
 
@@ -39,11 +61,17 @@
 
     .slide {
         display: none;
-        position: relative;
+        position: absolute;
+        height: 100%;
+        z-index: 1;
+
+
     }
 
     .slideshow-container .slide:first-of-type {
         display: block;
+        z-index: 1;
+
     }
 
     .slideshow-container, .slide {
@@ -52,6 +80,8 @@
        overflow: hidden;
        position: relative;
        margin: 0 auto;
+        z-index: 1;
+
    }
 
 
@@ -59,7 +89,7 @@
     .popup-box {
         display: none;
         position: absolute;
-        bottom: 10px;
+        bottom: 150px;
         left: 50%;
         transform: translateX(-50%);
         background-color: rgba(0, 0, 0, 0.7);
@@ -69,6 +99,8 @@
         font-size: 14px;
         text-align: center;
         white-space: nowrap;
+        z-index: 5;
+
     }
 
 
