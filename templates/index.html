@@ -302,7 +302,7 @@
 
 
 
-        <form method="post" id="question-form" style="display: none;">
+    <form method="post" id="question-form" style="display: none; z-index: 2; position: relative;">
 
             {% for question in questions %}
                 {% if question == "general" %}
@@ -538,6 +538,7 @@ function sendMessage() {
 
 </script>
 
+
 <script>
     let slideIndex = 0;
     const slides = document.querySelectorAll('.slide');
@@ -595,7 +596,6 @@ function sendMessage() {
     showSlide(slideIndex);
     startSlideshow();
 </script>
-
 
 
 </body>
